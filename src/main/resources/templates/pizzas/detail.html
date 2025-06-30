@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="'Pizzeria - ' + ${pizza.name}"></title>
+    <!-- Blocco per stile bootsrap e css -->
+    <th:block th:replace="~{ fragments/fragments :: Style}"></th:block>
+  </head>
+  <body>
+    <header th:replace="~{ fragments/fragments :: header}"></header>
+    <main class="text-center overflow-x-hidden" th:object="${pizza}">
+      <a th:href="@{/}" class="btn btn-warning mt-5 border-2-danger">
+        Torna alla Home
+      </a>
+      <h1 th:text="*{name}" class="mt-5"></h1>
+      <img th:src="*{foto}" alt="#" class="pizzapicDetail mb-3" />
+      <h3 th:text="'Descrizione: '+ *{description}"></h3>
+      <h4 th:text="'Prezzo: ' + *{price} + ' €'"></h4>
+      
+      <h6 class="mt-3">Ingredienti:</h4>
+      <div class="mb-3 d-flex justify-content-center gap-3">
+        <div th:if="*{ingredients.size()}" th:each="ingredient : *{ingredients}" th:object="${ingredient}" class="mb-2 ">
+          <p>#[[*{name}]]</p>
+        </div>
+        <p th:unless="*{ingredients.size()}" >Non ci sono ingredienti</p>
+      </div>
+
+      <div class="d-flex justify-content-center gap-5">
+        <a th:href="@{/pizzas/edit/} + *{id}" class="btn btn-warning mb-5"
+          >Modifica</a
+        >
+        <a
+          th:href="@{/pizzas/{id}/offer(id = ${pizza.id})}"
+          class="btn btn-warning mb-5"
+          >Aggiungi Offerta</a
+        >
+        <!-- PER EFFETTUARE UNA DELETE DEL PRODOTTO DOBBIAMO NECESSARIAMENTE UTILIZZARE UN FORM
+         PERCHè IL COMPONENTE "A TH:HREF" PUò EFFETTUARE SOLO CHIAMATE GET, QUINDI CI SERVIAMO 
+         DI UN BOTTONE CHE FUNGERà DA SUBMIT IN UN FORM CON IL METODO "POST" -->
+
+        <!-- Button trigger modal -->
+        <div>
+          <button
+            type="button"
+            class="btn btn-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop"
+          >
+            Elimina
+          </button>
+
+          <!-- Modal -->
+          <div
+            class="modal fade"
+            id="staticBackdrop"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabindex="-1"
+            aria-labelledby="staticBackdropLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                    Attenzione
+                  </h1>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  Sei sicuro di voler eliminare la pizza "[[${pizza.name}]]" ?
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Annulla
+                  </button>
+                  <form
+                    th:action="@{/pizzas/delete/{id} (id = *{id})}"
+                    th:method="post"
+                    id="delete-form"
+                  >
+                    <button class="btn btn-danger" type="submit">
+                      Elimina
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section>
+        <div class="row">
+          <div class="col-12">
+            <table class="table" th:if="*{offers.size() > 0}">
+              <thead>
+                <tr>
+                  <th>Titolo</th>
+                  <th>Data inizio</th>
+                  <th>Data fine</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  th:each="offer : *{offers}"
+                  th:object="${offer}"
+                  class="mb-2"
+                >
+                  <td>[[*{title}]]</td>
+                  <td>[[*{startDate}]]</td>
+                  <td>[[*{endDate}]]</td>
+                  <td>
+                    <a
+                      th:href="@{/offers/edit/{id} (id=${offer.id})}"
+                      class="btn btn-warning btn-sm"
+                    >
+                      Modifica</a
+                    >
+                  </td>
+                  <td>
+                     <form
+                    th:action="@{/offers/delete/{id} (id = *{id})}"
+                    th:method="post"
+                    id="delete-offer-form"
+                  >
+                    <button class="btn btn-danger" type="submit">
+                      Elimina
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p th:unless="*{offers.size() > 0}">NO OFFERS :(</p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer></footer>
+    <!-- Blocco per JS -->
+    <th:block th:replace="~{ fragments/fragments :: BootJS}"></th:block>
+  </body>
+</html>

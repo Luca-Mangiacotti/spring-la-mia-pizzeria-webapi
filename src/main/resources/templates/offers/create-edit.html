@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="'Pizzeria - Crea una nuova pizza'"></title>
+    <!-- Blocco per stile bootsrap e css -->
+    <th:block th:replace="~{ fragments/fragments :: Style}"></th:block>
+  </head>
+  <body>
+    <header th:replace="~{ fragments/fragments :: header}"></header>
+    <main class="text-center overflow-x-hidden" th:object="${pizza}">
+      <h1 class="mt-5 mb-5">
+        Aggiungi una nuova offerta per: [[${offer.pizza.getName()}]]
+      </h1>
+      <div class="container">
+        <form
+          th:action="${edit} ? @{'/offers/edit/'+${offer.id}} : @{/offers/create}"
+          th:object="${offer}"
+          method="post"
+        >
+          <!-- Campo nascosto per l'ID dell'offerta (necessario per l'edit) -->
+          <input type="hidden" th:if="${offer.id != null}" th:field="*{id}" />
+          <!-- qui nascondiamo i dati della pizza a cui faccio riferimento per l'offerta -->
+          <input type="hidden" th:field="*{pizza.id}" id="current-pizza" />
+          <div class="mb-3">
+            <label class="form-label" for="title">Titolo: </label>
+            <input
+              class="form-control mx-auto"
+              type="text"
+              id="title"
+              th:field="*{title}"
+              th:errorClass="is-invalid"
+            />
+            <div
+              class="invalid-feedback"
+              th:if=" ${#fields.hasErrors('title')}"
+            >
+              <ul>
+                <li
+                  th:each=" err : ${#fields.errors('title')}"
+                  th:text="${err}"
+                ></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="startDate"
+              >Data inizio offerta:
+            </label>
+            <input
+              class="form-control mx-auto"
+              type="date"
+              id="startDate"
+              th:field="*{startDate}"
+              th:errorClass="is-invalid"
+            />
+            <div
+              class="invalid-feedback"
+              th:if=" ${#fields.hasErrors('startDate')}"
+            >
+              <ul>
+                <li
+                  th:each=" err : ${#fields.errors('startDate')}"
+                  th:text="${err}"
+                ></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="endDate"
+              >Data termine offerta:
+            </label>
+            <input
+              class="form-control mx-auto"
+              type="date"
+              id="endDate"
+              th:field="*{endDate}"
+              th:errorClass="is-invalid"
+            />
+            <div
+              class="invalid-feedback"
+              th:if=" ${#fields.hasErrors('endDate')}"
+            >
+              <ul>
+                <li
+                  th:each=" err : ${#fields.errors('endDate')}"
+                  th:text="${err}"
+                ></li>
+              </ul>
+            </div>
+          </div>
+          <div class="mb-3 d-flex justify-content-center">
+            <input
+              type="submit"
+              class="btn btn-danger mx-3"
+              value="Crea Offerta"
+            />
+            <input type="reset" class="btn btn-warning mx-3" value="Reset" />
+          </div>
+        </form>
+      </div>
+    </main>
+    <footer></footer>
+    <!-- Blocco per JS -->
+    <th:block th:replace="~{ fragments/fragments :: BootJS}"></th:block>
+  </body>
+</html>

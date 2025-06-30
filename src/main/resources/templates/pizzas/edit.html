@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="'Pizzeria - Modifica la tua ' + ${pizza.name}"></title>
+    <!-- Blocco per stile bootsrap e css -->
+    <th:block th:replace="~{ fragments/fragments :: Style}"></th:block>
+  </head>
+  <body>
+    <header th:replace="~{ fragments/fragments :: header}"></header>
+    <main class="text-center overflow-x-hidden" th:object="${pizza}">
+      <h1 class="mt-5 mb-5">Modifica: [[*{name}]]</h1>
+      <div class="container">
+        <!-- in questo caso per l'update cambieremo anche l'action del form  -->
+        <form
+          id="new-pizza-form"
+          th:action="@{/pizzas/edit/{id} (id = ${pizza.id})}"
+          method="post"
+          th:object="${pizza}"
+        >
+          <!-- Aggiungiamo un blocco che servirà per controllare gli errori di inserimento
+         e verrà visualizzato solamente in quel caso -->
+          <!-- 
+          <div class="mb-3" th:if="${#fields.hasErrors()}">
+            <ul class="alert alert-warning">
+              <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+            </ul>
+          </div> -->
+
+          <div class="mb-3">
+            <label class="form-label" for="name">Nome: </label>
+            <input
+              class="form-control mx-auto"
+              type="text"
+              id="name"
+              th:field="*{name}"
+              th:errorClass="is-invalid"
+            />
+            <!-- Aggiunta contestuale degli errori su ogni input aggiungendo th:errorClass all'input e in seguito un div con dentro
+             l'errore contestualizzato -->
+            <div class="invalid-feedback" th:if=" ${#fields.hasErrors('name')}">
+              <ul>
+                <li
+                  th:each=" err : ${#fields.errors('name')}"
+                  th:text="${err}"
+                ></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Ingredienti:</label>
+            <div class="d-flex flex-wrap justify-content-center">
+              <div
+                class="form-check mx-2"
+                th:each="ingredient : ${ingredients}"
+              >
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  th:id="'ingredient-' + ${ingredient.id}"
+                  th:value="${ingredient.id}"
+                  th:field="*{ingredients}"
+                />
+                <label
+                  class="form-check-label"
+                  th:for="'ingredient-' + ${ingredient.id}"
+                  th:text="${ingredient.name}"
+                ></label>
+              </div>
+            </div>
+            <div
+              class="invalid-feedback d-block"
+              th:if="${#fields.hasErrors('ingredients')}"
+            >
+              <ul>
+                <li
+                  th:each="err : ${#fields.errors('ingredients')}"
+                  th:text="${err}"
+                ></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="description">Descrizione: </label>
+            <textarea
+              class="form-control mx-auto"
+              id="description"
+              th:field="*{description}"
+              th:errorClass="is-invalid"
+            ></textarea>
+            <div
+              class="invalid-feedback"
+              th:if=" ${#fields.hasErrors('description')}"
+            >
+              <ul>
+                <li
+                  th:each=" err : ${#fields.errors('description')}"
+                  th:text="${err}"
+                ></li>
+              </ul>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="foto">Foto (url): </label>
+            <input
+              class="form-control mx-auto"
+              type="text"
+              id="foto"
+              th:field="*{foto}"
+              th:errorClass="is-invalid"
+            />
+            <div class="invalid-feedback" th:if=" ${#fields.hasErrors('foto')}">
+              <ul>
+                <li
+                  th:each=" err : ${#fields.errors('foto')}"
+                  th:text="${err}"
+                ></li>
+              </ul>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="price">Prezzo (€): </label>
+            <input
+              class="form-control mx-auto"
+              type="number"
+              min="0"
+              step="0.01"
+              id="price"
+              th:field="*{price}"
+              th:errorClass="is-invalid"
+            />
+            <div
+              class="invalid-feedback"
+              th:if=" ${#fields.hasErrors('price')}"
+            >
+              <ul>
+                <li
+                  th:each=" err : ${#fields.errors('price')}"
+                  th:text="${err}"
+                ></li>
+              </ul>
+            </div>
+          </div>
+          <div class="mb-3 d-flex justify-content-center">
+            <input type="submit" class="btn btn-danger mx-3" value="Modifica" />
+            <input type="reset" class="btn btn-warning mx-3" value="Reset" />
+          </div>
+        </form>
+      </div>
+    </main>
+    <footer></footer>
+    <!-- Blocco per JS -->
+    <th:block th:replace="~{ fragments/fragments :: BootJS}"></th:block>
+  </body>
+</html>

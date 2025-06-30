@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="'Pizzeria - gestione Ingredienti'"></title>
+    <!-- Blocco per stile bootsrap e css -->
+    <th:block th:replace="~{ fragments/fragments :: Style}"></th:block>
+  </head>
+  <body>
+    <header th:replace="~{ fragments/fragments :: header}"></header>
+    <main class="text-center overflow-x-hidden" th:object="${pizza}">
+      <h1 class="mt-5 mb-5">Aggiungi un nuovo ingrediente</h1>
+      <div class="container">
+        <form
+          th:action="${edit} ? @{'/ingredients/edit/'+${ingredient.id}} : @{/ingredients/create}"
+          th:object="${ingredient}"
+          method="post"
+        >
+          <!-- Campo nascosto per l'ID dell'ingrediente (necessario per l'edit) -->
+          <input
+            type="hidden"
+            th:if="${ingredient.id != null}"
+            th:field="*{id}"
+          />
+          <div class="mb-3">
+            <label class="form-label" for="name">Nome ingrediente: </label>
+            <input
+              class="form-control mx-auto"
+              type="text"
+              id="name"
+              th:field="*{name}"
+              th:errorClass="is-invalid"
+            />
+            <div class="invalid-feedback" th:if=" ${#fields.hasErrors('name')}">
+              <ul>
+                <li
+                  th:each=" err : ${#fields.errors('name')}"
+                  th:text="${err}"
+                ></li>
+              </ul>
+            </div>
+          </div>
+          <div class="mb-3 d-flex justify-content-center">
+            <input
+              type="submit"
+              class="btn btn-danger mx-3"
+              value="Inserisci"
+            />
+            <input type="reset" class="btn btn-warning mx-3" value="Reset" />
+          </div>
+        </form>
+      </div>
+    </main>
+    <footer></footer>
+    <!-- Blocco per JS -->
+    <th:block th:replace="~{ fragments/fragments :: BootJS}"></th:block>
+  </body>
+</html>

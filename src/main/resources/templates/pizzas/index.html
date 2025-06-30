@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pizzeria-Elenco Pizze</title>
+    <!-- Blocco per stile bootsrap e css -->
+    <th:block th:replace="~{ fragments/fragments :: Style}"></th:block>
+  </head>
+  <body>
+    <header th:replace="~{ fragments/fragments :: header}"></header>
+    <main class="container text-center overflow-x-hidden">
+      <h1 class="mt-5 mb-3">ELENCO DELLE NOSTRE PIZZE IN 8 BIT</h1>
+      <div class="d-flex container justify-content-between align-items-center">
+        <a th:href="@{/pizzas/create}" class="btn btn-xs btn-warning"
+          >Crea una Pizza</a
+        >
+
+        <form
+          th:action="@{/pizzas}"
+          method="get"
+          class="d-flex align-items-center gap-3"
+        >
+          <input
+            class="mt-5 mb-5 border-warning border-5"
+            type="text"
+            name="keyword"
+            placeholder="Cerca pizza"
+            th:value="${keyword}"
+          />
+          <button type="submit" class="btn btn-warning">Cerca</button>
+        </form>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <table class="table" th:if="${pizzas.size() > 0}">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Descrizione</th>
+                <th>Foto</th>
+                <th>Prezzo €</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="pizza : ${pizzas}" th:object="${pizza}">
+                <td>[[*{name}]]</td>
+                <td>[[*{description}]]</td>
+                <td><img th:src="*{foto}" alt="#" class="pizzapic" /></td>
+                <td>[[*{price}]] €</td>
+                <td th:insert="~{ fragments/fragments :: pizzalink}"></td>
+              </tr>
+            </tbody>
+          </table>
+          <p th:unless="${pizzas.size() > 0}">NO PIZZAS HERE :(</p>
+        </div>
+      </div>
+    </main>
+    <footer></footer>
+    <!-- Blocco per JS -->
+    <th:block th:replace="~{ fragments/fragments :: BootJS}"></th:block>
+  </body>
+</html>
