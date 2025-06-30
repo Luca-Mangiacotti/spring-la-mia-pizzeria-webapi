@@ -1,7 +1,7 @@
 package org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.controller;
 
 import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.model.Offer;
-import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.repository.OfferRepository;
+import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.service.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +19,7 @@ import jakarta.validation.Valid;
 public class OfferController {
 
     @Autowired
-    private OfferRepository repository;
+    private OfferService offerService;
 
     // AGGIUNTA DI UNA NUOVA OFFERTA (CREATE)
     @GetMapping("/create")
@@ -35,7 +35,7 @@ public class OfferController {
             return "offers/create-edit";
         }
 
-        repository.save(offerForm);
+        offerService.create(offerForm);
         return "redirect:/pizzas/" + offerForm.getPizza().getId();
 
     }
@@ -44,7 +44,7 @@ public class OfferController {
 
     @GetMapping("edit/{id}")
     public String edit(@PathVariable Integer id, Model model) {
-        model.addAttribute("offer", repository.findById(id).get());
+        model.addAttribute("offer", offerService.getById(id));
         model.addAttribute("edit", true);
         return "offers/create-edit";
     }
@@ -59,14 +59,15 @@ public class OfferController {
         }
 
         // nel caso non ci siano errori possiamo salvare il nostro prodotto tramite la
-        // repository con il comando .save
-        repository.save(offerForm);
+        // offerService con il comando .save
+        offerService.update(offerForm);
         return "redirect:/pizzas/" + offerForm.getPizza().getId();
 
     }
 
     // ELIMINAZIONE DI UN'OFFERTA (DELETE)
-    // andando a prendere l'elemento tramite id dal db ci serviamo della repository
+    // andando a prendere l'elemento tramite id dal db ci serviamo della
+    // offerService
     // che utilizza il metodo
     // deleteById(idProdotto)
 
@@ -75,9 +76,9 @@ public class OfferController {
 
         // aggiungiamo .orElseThrow per gestire l'eccezione nel caso non esistesse
         // l'offerta
-        Offer offer = repository.findById(id).orElseThrow(() -> new RuntimeException("Offer not found"));
+        Offer offer = offerService.getById(id);
         Integer pizzaId = offer.getPizza().getId();
-        repository.deleteById(id);
+        offerService.deleteById(id);
 
         return "redirect:/pizzas/" + pizzaId;
     }

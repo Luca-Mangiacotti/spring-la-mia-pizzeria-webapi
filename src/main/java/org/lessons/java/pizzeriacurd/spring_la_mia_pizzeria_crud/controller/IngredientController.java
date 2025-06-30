@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.model.Ingredient;
 import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.model.Pizza;
-import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.repository.IngredientRepository;
+import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,12 +22,12 @@ import jakarta.validation.Valid;
 public class IngredientController {
 
     @Autowired
-    private IngredientRepository ingredientRepository;
+    private IngredientService ingredientService;
 
     // INDEX PER GLI INGREDIENTI
     @GetMapping
     public String index(Model model) {
-        List<Ingredient> ingredients = ingredientRepository.findAll();
+        List<Ingredient> ingredients = ingredientService.findAll();
         model.addAttribute("ingredients", ingredients);
         return "ingredients/index";
     }
@@ -47,7 +47,7 @@ public class IngredientController {
             return "ingredients/create-edit";
         }
 
-        ingredientRepository.save(ingredientForm);
+        ingredientService.create(ingredientForm);
         return "redirect:/ingredients";
 
     }
@@ -56,7 +56,7 @@ public class IngredientController {
 
     @GetMapping("edit/{id}")
     public String edit(@PathVariable Integer id, Model model) {
-        model.addAttribute("ingredient", ingredientRepository.findById(id).get());
+        model.addAttribute("ingredient", ingredientService.getById(id));
         model.addAttribute("edit", true);
         return "ingredients/create-edit";
     }
@@ -73,7 +73,7 @@ public class IngredientController {
 
         // nel caso non ci siano errori possiamo salvare il nostro prodotto tramite la
         // repository con il comando .save
-        ingredientRepository.save(ingredientForm);
+        ingredientService.update(ingredientForm);
         return "redirect:/ingredients";
 
     }
@@ -87,17 +87,17 @@ public class IngredientController {
     public String delete(@PathVariable("id") Integer id) {
 
         // andiamo a salvare l'ingrediente da rimuovere tramite id in una variabile
-        // Ingredient dalla nostra ingredientRepository
+        // Ingredient dalla nostra ingredientService
         // attraverso un forEach andiamo a chiedere di ciclare "per tutte lepizze che
         // hanno quell'ingrediente " ->rimuovi l'ingrediente
         // dalla pizza collegata
         // infine elimina attraverso la repository l'ingrediente dal DB
-        Ingredient ingredientToRemove = ingredientRepository.findById(id).get();
+        Ingredient ingredientToRemove = ingredientService.getById(id);
         for (Pizza linkedPizza : ingredientToRemove.getPizzas()) {
             linkedPizza.getIngredients().remove(ingredientToRemove);
 
         }
-        ingredientRepository.delete(ingredientToRemove);
+        ingredientService.delete(ingredientToRemove);
 
         return "redirect:/ingredients";
     }

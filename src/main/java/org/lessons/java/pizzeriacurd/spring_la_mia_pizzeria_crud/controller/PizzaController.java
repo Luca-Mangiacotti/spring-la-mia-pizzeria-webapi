@@ -1,7 +1,6 @@
 package org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.controller;
 
-import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.repository.IngredientRepository;
-
+import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.service.IngredientService;
 import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +28,7 @@ public class PizzaController {
     private PizzaService pizzaService;
 
     @Autowired
-    private IngredientRepository ingredientRepository;
+    private IngredientService ingredientService;
 
     // INDEX DEI PRODOTTI (INDEX)
 
@@ -71,7 +70,7 @@ public class PizzaController {
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("pizza", new Pizza());
-        model.addAttribute("ingredients", ingredientRepository.findAll());
+        model.addAttribute("ingredients", ingredientService.findAll());
         return "pizzas/create";
     }
 
@@ -96,7 +95,7 @@ public class PizzaController {
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model) {
         model.addAttribute("pizza", pizzaService.getById(id));
-        model.addAttribute("ingredients", ingredientRepository.findAll());
+        model.addAttribute("ingredients", ingredientService.findAll());
         return "pizzas/edit";
     }
 
