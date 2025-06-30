@@ -124,7 +124,7 @@
                   <td>[[*{endDate}]]</td>
                   <td>
                     <a
-                      th:href="@{/offers/edit/{id} (id=${offer.id})}"
+                      th:href="@{/offers/edit/{id} (id=*{id})}"
                       class="btn btn-warning btn-sm"
                     >
                       Modifica</a
@@ -132,13 +132,14 @@
                   </td>
                   <td>
                      <form
-                    th:action="@{/offers/delete/{id} (id = *{id})}"
+                    th:action="@{/offers/delete/{id} (id =*{id})}"
                     th:method="post"
-                    id="delete-offer-form"
+                    th:id="*{id}"
                   >
                     <button class="btn btn-danger" type="submit">
                       Elimina
                     </button>
+                    </form>
                   </td>
                 </tr>
               </tbody>

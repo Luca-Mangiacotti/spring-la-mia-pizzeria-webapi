@@ -1,7 +1,8 @@
 package org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.controller;
 
 import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.repository.IngredientRepository;
-import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.repository.PizzaRepository;
+
+import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +26,7 @@ import java.util.List;
 public class PizzaController {
 
     @Autowired
-    private PizzaRepository repository;
+    private PizzaService pizzaService;
 
     @Autowired
     private IngredientRepository ingredientRepository;
@@ -39,9 +40,9 @@ public class PizzaController {
         // in una lista di tipo Pizza
         List<Pizza> pizzas;
         if (keyword != null) {
-            pizzas = repository.findByNameContainingIgnoreCase(keyword);
+            pizzas = pizzaService.findAll(keyword);
         } else {
-            pizzas = repository.findAll();
+            pizzas = pizzaService.findAll(keyword = null);
         }
         model.addAttribute("pizzas", pizzas);
         model.addAttribute("keyword", keyword);
@@ -55,7 +56,7 @@ public class PizzaController {
     public String show(@PathVariable("id") Integer id, Model model) {
 
         // con questo comando è come fare una query SELECT * from pizzas where "id" =id
-        Pizza pizza = repository.findById(id).get();
+        Pizza pizza = pizzaService.getById(id);
 
         if (pizza == null) {
             return "rederict:/pizzas";
@@ -85,7 +86,7 @@ public class PizzaController {
 
         // nel caso non ci siano errori possiamo salvare il nostro prodotto tramite la
         // repository con il comando .save
-        repository.save(pizzaForm);
+        pizzaService.create(pizzaForm);
         return "redirect:/pizzas";
 
     }
@@ -94,7 +95,7 @@ public class PizzaController {
 
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model) {
-        model.addAttribute("pizza", repository.findById(id).get());
+        model.addAttribute("pizza", pizzaService.getById(id));
         model.addAttribute("ingredients", ingredientRepository.findAll());
         return "pizzas/edit";
     }
@@ -110,7 +111,7 @@ public class PizzaController {
 
         // nel caso non ci siano errori possiamo salvare il nostro prodotto tramite la
         // repository con il comando .save
-        repository.save(pizzaForm);
+        pizzaService.update(pizzaForm);
         return "redirect:/pizzas/{id}";
 
     }
@@ -122,7 +123,7 @@ public class PizzaController {
 
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer id) {
-        repository.deleteById(id);
+        pizzaService.deleteById(id);
         return "redirect:/pizzas";
     }
 
@@ -132,7 +133,7 @@ public class PizzaController {
     public String offer(@PathVariable("id") Integer id, Model model) {
 
         Offer offer = new Offer();
-        offer.setPizza(repository.findById(id).get());
+        offer.setPizza(pizzaService.getById(id));
         model.addAttribute("offer", offer);
 
         return "offers/create-edit";
@@ -143,7 +144,7 @@ public class PizzaController {
     @GetMapping("/{id}/ingredient")
     public String ingredients(@PathVariable("id") Integer id, Model model) {
 
-        List<Ingredient> ingredients = repository.findById(id).get().getIngredients();
+        List<Ingredient> ingredients = pizzaService.getById(id).getIngredients();
         model.addAttribute("ingredients", ingredients);
 
         return "ingredients/create-edit";
