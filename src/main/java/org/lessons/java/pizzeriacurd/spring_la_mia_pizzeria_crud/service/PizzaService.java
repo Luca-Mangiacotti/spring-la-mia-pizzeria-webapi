@@ -1,6 +1,7 @@
 package org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.model.Pizza;
 import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.repository.PizzaRepository;
@@ -27,6 +28,11 @@ public class PizzaService {
     // Show tramite Id
     public Pizza getById(Integer id) {
         return pizzaRepository.findById(id).get();
+    }
+
+    // Find by id
+    public Optional<Pizza> findById(Integer id) {
+        return pizzaRepository.findById(id);
     }
 
     // Creazione di una nuova Pizza
