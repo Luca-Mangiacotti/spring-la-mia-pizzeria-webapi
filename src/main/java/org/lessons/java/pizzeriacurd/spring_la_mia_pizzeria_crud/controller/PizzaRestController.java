@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.model.Pizza;
-import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.service.IngredientService;
 import org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,8 +25,6 @@ public class PizzaRestController {
 
     @Autowired
     private PizzaService pizzaService;
-    @Autowired
-    private IngredientService ingredientService;
 
     // Index
     @GetMapping
