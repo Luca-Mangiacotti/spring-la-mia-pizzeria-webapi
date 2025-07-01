@@ -3,6 +3,8 @@ package org.lessons.java.pizzeriacurd.spring_la_mia_pizzeria_crud.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -55,6 +57,7 @@ public class Pizza {
     // aggiunta della relazione many to many con la tabella ingredients
     @ManyToMany
     @JoinTable(name = "ingredient_pizza", joinColumns = @JoinColumn(name = "pizza_id"), inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
+    @JsonManagedReference
     private List<Ingredient> ingredients;
 
     // getter & setter

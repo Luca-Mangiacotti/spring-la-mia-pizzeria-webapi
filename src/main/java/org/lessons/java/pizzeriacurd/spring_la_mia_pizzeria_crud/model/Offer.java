@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -43,6 +45,7 @@ public class Offer {
     // aggiungiamo la colonna per collegare offerte alla singola pizza e
     // e informiamo che la nostra colonna pizza_id non può essere null
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "pizza_id", nullable = false)
     private Pizza pizza;
 

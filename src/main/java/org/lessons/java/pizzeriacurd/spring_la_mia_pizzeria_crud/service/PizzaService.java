@@ -18,7 +18,7 @@ public class PizzaService {
     // Index con Search
     public List<Pizza> findAll(String keyword) {
 
-        if (keyword != null) {
+        if (keyword != null && !keyword.isEmpty()) {
             return pizzaRepository.findByNameContainingIgnoreCase(keyword);
         }
 
@@ -33,6 +33,11 @@ public class PizzaService {
     // Find by id
     public Optional<Pizza> findById(Integer id) {
         return pizzaRepository.findById(id);
+    }
+
+    // Exist by id
+    public Boolean existById(Integer id) {
+        return pizzaRepository.existsById(id);
     }
 
     // Creazione di una nuova Pizza
